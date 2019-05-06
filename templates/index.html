@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Sentiment Analyzer</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+ <link type="text/css" href="static/stockTicker.css" rel="stylesheet" />
+     <script type="text/javascript" src="static/stockTicker.js"></script>
+<style>
+@import url(https://fonts.googleapis.com/css?family=Open+Sans)
+
+@font-face {
+  font-family:"Helvetica Neue";
+  src: url("static/HelveticaNeue.ttf") format("truetype");
+}
+body{
+  background-image: url('static/back.jpg');
+  font-family: 'Helvetica Neue';
+}
+
+.search {
+  width: 100%;
+  position: relative
+}
+
+.searchTerm {
+  float: left;
+  width: 100%;
+  border: 3px solid #000;
+  padding: 18px;
+  height: 20px;
+  border-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
+  font-size: 15px;
+}
+
+.searchTerm:focus{
+  color: #000;
+}
+
+.searchButton {
+  position: absolute;  
+  right: -40px;
+  width: 62px;
+  height: 62px;
+  border: 1px solid #000;
+  background: #000;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#result {
+  text-align: center;
+  font-size: 2em;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+  width: 30%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+  </style>
+<script type=text/javascript>
+$(document).ready(
+    function(){
+        $("#calculate").click(function () {
+            $("#result").hide();
+            $("#loader").show("slow");
+            $("#text").show("slow");
+        });
+
+    });
+
+  $(function() {
+    $('a#calculate').bind('click', function() {
+      $.getJSON('/_calculate', {
+        key: $('input[name="key"]').val()
+      }, function(data) {
+        $("#loader").hide("fast");
+        $("#text").hide("fast");
+        var show = "hi";
+        if(data.result >= 100)
+          show = "Very Positive";
+        if(data.result < 100 && data.result >= 50)
+          show = "Positive";
+        if(data.result < 50 && data.result >= 30)
+          show = "Slightly Positive";
+        if(data.result < 30 && data.result >= 20)
+          show = "Neutral";
+        if(data.result < 20 && data.result >= 0)
+          show = "Negative";
+        if(data.result < 0)
+          show = "Very Negative";
+        $("#result").text("Sentiment: " + show + " (" + data.result + ")");
+        $("#result").show();
+      });
+      return false;
+    });
+  });
+</script>
+<link rel="shortcut icon" href="static/favicon.ico">
+</head>
+<body>
+<div style="width:100%;">
+    <meta id="stl_6" name="description" content="stockTicker Lite"/>
+    <script>$(function(){$("#stl_6").stockTicker({symbols : "AAPL,GOOGL,NVDA,GOOG,MSFT,TEAM,INTC,CSCO,ADBE,FB,ORCL,QCOM,AMZN,PYPL,TSLA,CRM,EA,TSM,INFY,SNAP", theme : "default noName noBorder"});});</script>
+</div>
+<div class="wrap">
+  <h1>Stock Sentiment Analysis</h1><h4>Analyze stock data from thousands of tweets in seconds.</h4>
+   <div class="search">
+      <input type="text" class="searchTerm" placeholder="Enter stock ticker eg. aapl" name=key required>
+      <a href=# id=calculate>
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search"></i>
+      </button>
+      </a>
+       <div id='loader' align="center" style="display: none;"><img src="static/loading.gif"/></div>
+       <div id="text" align="center" style="display:none;text-align:center;">Patience. Big data takes time.</div>
+       <div id="result"></div>
+   </div>
+</div>
+</body>
+<div class="footer">
+  <p>&copy; Shubham Chamaria: <a href="mailto:shubhamchamaria@gmail.com">shubhamchamaria@gmail.com</a>.</p>
+</div>
+</html>

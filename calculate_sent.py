@@ -91,7 +91,7 @@ api = twitter.Api(
  )
 
 def store_recent(keyword):
-    search = api.GetSearch(term='$'+keyword, lang='en', result_type='recent', count=100, max_id='')
+    search = api.GetSearch(term='$'+keyword, lang='en', result_type='recent')
     tweets = []
     for s in search:
         tweets.append(preprocess_tweet(s.text))
